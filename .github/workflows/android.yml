@@ -16,12 +16,14 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Prepare Android SDK
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
       - name: Generate Gradle wrapper
         shell: bash
         run: |
-          gradle --version
           gradle wrapper --gradle-version 8.11.1
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug --stacktrace
